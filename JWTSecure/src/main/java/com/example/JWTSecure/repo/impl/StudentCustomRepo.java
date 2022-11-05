@@ -1,6 +1,5 @@
 package com.example.JWTSecure.repo.impl;
 import com.example.JWTSecure.DTO.StudentDTO;
-import com.example.JWTSecure.DTO.TeacherDTO;
 import org.hibernate.Session;
 import org.hibernate.query.NativeQuery;
 import org.hibernate.transform.Transformers;
@@ -18,9 +17,14 @@ public class StudentCustomRepo {
     public List<StudentDTO> doSearch(StudentDTO studentDTO) {
 
         StringBuilder sql = new StringBuilder()
-                .append("select s.id as student_Id, s.user_id as user_Id, s.role_id as role_Id, " +
-                        " u.username as user_name, u.fullname as full_name, u.email as email, u.phone as phone, u.address as address, u.active as active\\n\" +\n" +
-                        " from student s join users u on s.user_id = u.id");
+                .append("select s.id as student_Id, s.user_id as user_Id,\n" +
+                        "u.username as user_name, u.fullname as full_name,\n" +
+                        "u.email as email, u.phone as phone, u.address as address,\n" +
+                        "u.active as active, c.name as class_name, co.name as course_name\n" +
+                        "from student s join users u on s.user_id = u.id\n" +
+                        "join student_in_class sic on s.id = sic.student_id\n" +
+                        "join class c on sic.class_id = c.id\n" +
+                        "join course co on c.course_id = co.id");
         sql.append(" WHERE 1 = 1 ");
         if (studentDTO.getKey_search()!=null) {
             sql.append(" AND (UPPER(u.fullname) LIKE CONCAT('%', UPPER(:full_name), '%') ESCAPE '&') ");
@@ -34,15 +38,16 @@ public class StudentCustomRepo {
 
         query.addScalar("student_Id", new LongType());
         query.addScalar("user_Id", new LongType());
-        query.addScalar("role_Id", new LongType());
         query.addScalar("user_name", new StringType());
         query.addScalar("full_name", new StringType());
         query.addScalar("email", new StringType());
         query.addScalar("phone", new StringType());
         query.addScalar("address", new StringType());
         query.addScalar("active", new BooleanType());
+        query.addScalar("class_name", new StringType());
+        query.addScalar("course_name", new StringType());
 
-        query.setResultTransformer(Transformers.aliasToBean(TeacherDTO.class));
+        query.setResultTransformer(Transformers.aliasToBean(StudentDTO.class));
         if (null != String.valueOf(studentDTO.getPage())) {
             query.setMaxResults(studentDTO.getPageSize());
             query.setFirstResult(((studentDTO.getPage() - 1) * studentDTO.getPageSize()));
@@ -53,9 +58,14 @@ public class StudentCustomRepo {
     public List<StudentDTO> getTotal(StudentDTO studentDTO) {
 
         StringBuilder sql = new StringBuilder()
-                .append("select s.id as student_Id, s.user_id as user_Id, s.role_id as role_Id, " +
-                        " u.username as user_name, u.fullname as full_name, u.email as email, u.phone as phone, u.address as address, u.active as active\\n\" +\n" +
-                        " from student s join users u on s.user_id = u.id");
+                .append("select s.id as student_Id, s.user_id as user_Id,\n" +
+                        "u.username as user_name, u.fullname as full_name,\n" +
+                        "u.email as email, u.phone as phone, u.address as address,\n" +
+                        "u.active as active, c.name as class_name, co.name as course_name\n" +
+                        "from student s join users u on s.user_id = u.id\n" +
+                        "join student_in_class sic on s.id = sic.student_id\n" +
+                        "join class c on sic.class_id = c.id\n" +
+                        "join course co on c.course_id = co.id");
         sql.append(" WHERE 1 = 1 ");
         if (studentDTO.getKey_search()!=null) {
             sql.append(" AND (UPPER(u.fullname) LIKE CONCAT('%', UPPER(:full_name), '%') ESCAPE '&') ");
@@ -69,17 +79,33 @@ public class StudentCustomRepo {
 
         query.addScalar("student_Id", new LongType());
         query.addScalar("user_Id", new LongType());
-        query.addScalar("role_Id", new LongType());
         query.addScalar("user_name", new StringType());
         query.addScalar("full_name", new StringType());
         query.addScalar("email", new StringType());
         query.addScalar("phone", new StringType());
         query.addScalar("address", new StringType());
         query.addScalar("active", new BooleanType());
+        query.addScalar("class_name", new StringType());
+        query.addScalar("course_name", new StringType());
 
-        query.setResultTransformer(Transformers.aliasToBean(TeacherDTO.class));
+        query.setResultTransformer(Transformers.aliasToBean(StudentDTO.class));
+        query.list();
         return query.list();
     }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     public StudentDTO getStudent(StudentDTO studentDTO) {
 
@@ -114,6 +140,7 @@ public class StudentCustomRepo {
         }
         return (StudentDTO) query.getSingleResult();
     }
+
     //bug
     public List<StudentDTO> getListStudentByIdClass(Long id) {
 

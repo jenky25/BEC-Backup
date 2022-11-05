@@ -126,6 +126,7 @@ public class ClassServiceImpl implements ClassService {
                     classes.setTeacherId(classDTO.getTeacher_id());
                     classes.setName(classDTO.getClass_name());
                     classes.setCourseId(classDTO.getCourse_id());
+                    classes.setActive(classDTO.isActive());
                     classRepo.save(classes);
 
                     SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");

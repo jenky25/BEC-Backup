@@ -78,5 +78,4 @@ public class AcademicAdminResource {
     public ResponseEntity<ResponseStatus> deleteRoom(@RequestBody Room room) {
         return ResponseEntity.ok().body(roomService.deleteRoom(room));
     }
-
 }

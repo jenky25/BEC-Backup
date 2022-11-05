@@ -28,7 +28,5 @@ public class Student {
     private Long userId;
     @Column(name="role_id")
     private Long roleId;
-    @Column(name="class_id")
-    private Long classId;
 }
 

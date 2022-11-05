@@ -7,6 +7,9 @@ import lombok.Setter;
 import java.io.Serializable;
 import java.time.Instant;
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -19,6 +22,9 @@ public class StudentDTO implements Serializable {
     private String class_name;
     private String user_name;
     private String full_name;
+    private String course_name;
+    private List<String> courses;
+    private List<String> classes;
     private String email;
     private String phone;
     private String address;
@@ -28,5 +34,5 @@ public class StudentDTO implements Serializable {
     private String key_search;
     private int page;
     private int pageSize;
-    private int resultData;
+//    private int resultData;
 }

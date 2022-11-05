@@ -13,7 +13,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
-import java.util.Collections;
+import java.util.*;
 import java.util.List;
 
 @Service
@@ -36,20 +36,61 @@ public class StudentServiceImpl implements StudentService {
         }
     }
 
+    public List<StudentDTO> getNotDuplicate(List<StudentDTO> list) {
+        List<StudentDTO> li = new ArrayList<>();
+        Set<Long> set = new HashSet<>();
+        for (StudentDTO i : list) {
+            if (!set.contains(i.getStudent_Id())) {
+                li.add(i);
+                set.add(i.getStudent_Id());
+            }
+        }
+        return li;
+    }
+
+    public List<String> groupClasses(List<StudentDTO> list, Long id) {
+        List<String> listClasses = new ArrayList<>();
+        for (StudentDTO i : list) {
+            if (i.getStudent_Id() == id) {
+                listClasses.add(i.getClass_name());
+            }
+        }
+        return listClasses;
+    }
+
+    public List<String> groupCourses(List<StudentDTO> list, Long id) {
+        List<String> listCourses = new ArrayList<>();
+        for (StudentDTO i : list) {
+            if (i.getStudent_Id() == id) {
+                listCourses.add(i.getCourse_name());
+            }
+        }
+        return listCourses;
+    }
+
     @Override
     public SearchResultDTO<StudentDTO> getAllStudent(StudentDTO studentDTO) {
         List<StudentDTO> dataResult;
         SearchResultDTO<StudentDTO> searchResult = new SearchResultDTO<>();
+
         try {
             Integer totalRecord = studentCustomRepo.getTotal(studentDTO).size();
             dataResult = studentCustomRepo.doSearch(studentDTO);
+
+            for (StudentDTO i : dataResult) {
+                if (groupClasses(dataResult, i.getStudent_Id()) != null) {
+                    i.setClasses(groupClasses(dataResult, i.getStudent_Id()));
+                    i.setCourses(groupCourses(dataResult, i.getStudent_Id()));
+                }
+            }
+
             if (dataResult != null && !dataResult.isEmpty()) {
                 searchResult.setCode("0");
                 searchResult.setSuccess(true);
                 searchResult.setTitle("Success");
                 searchResult.setMessage("Success");
-                searchResult.setResultData(dataResult);
-                searchResult.setTotalRecordNoLimit(totalRecord);
+                searchResult.setResultData(getNotDuplicate(dataResult));
+                searchResult.setTotalRecordNoLimit(getNotDuplicate(dataResult).size());
             } else {
                 searchResult.setCode("0");
                 searchResult.setSuccess(false);
@@ -105,7 +146,7 @@ public class StudentServiceImpl implements StudentService {
 
                             student.setUserId(userRepo.findTopByOrderByIdDesc().getId());
                             student.setRoleId(4L);
-                            student.setClassId(addStudentDTO.getClassId());
+//                            student.setClassId(addStudentDTO.getClassId());
 
                             studentRepo.save(student);
                             rs.setMessage("Ok");
@@ -151,7 +192,7 @@ public class StudentServiceImpl implements StudentService {
                     if (userRepo.findByEmail(addStudentDTO.getEmail()) == null) {
                         student.setUserId(addStudentDTO.getId());
                         student.setRoleId(4L);
-                        student.setClassId(addStudentDTO.getClassId());
+//                        student.setClassId(addStudentDTO.getClassId());
                         studentRepo.save(student);
 
                         user.setId(addStudentDTO.getId());
