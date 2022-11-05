@@ -3,7 +3,6 @@ package com.example.JWTSecure.domain;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
 import javax.persistence.*;
 
 @Entity
@@ -28,5 +27,11 @@ public class Student {
     private Long userId;
     @Column(name="role_id")
     private Long roleId;
+
+    public Student(Long id, Long userId, Long roleId) {
+        this.id = id;
+        this.userId = userId;
+        this.roleId = roleId;
+    }
 }
 

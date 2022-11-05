@@ -1,9 +1,11 @@
 package com.example.JWTSecure.service.impl;
 
-
 import com.example.JWTSecure.DTO.RegistrationRequest;
+import com.example.JWTSecure.domain.Student;
 import com.example.JWTSecure.domain.User;
 import com.example.JWTSecure.email.EmailSender;
+import com.example.JWTSecure.repo.StudentRepo;
+import com.example.JWTSecure.repo.UserRepo;
 import com.example.JWTSecure.service.UserService;
 import com.example.JWTSecure.token.ConfirmationToken;
 import com.example.JWTSecure.token.ConfirmationTokenService;
@@ -23,6 +25,8 @@ public class RegistrationService {
     private final EmailValidator emailValidator;
     private final ConfirmationTokenService confirmTokenService;
     private final EmailSender emailSender;
+    private final UserRepo userRepo;
+    private final StudentRepo studentRepo;
 
     public String register(RegistrationRequest request) {
         boolean isValidEmail = emailValidator.test(request.getEmail());
@@ -34,6 +38,10 @@ public class RegistrationService {
                     request.getPhone(),
                     request.getAddress()));
 
+            //???
+            User user = userRepo.findByUsername(request.getFullname());
+            studentRepo.save(new Student(null, user.getId(),4L));
+            //
             String link = "http://localhost:8070/api/v1/registration/confirm?token=" + tokenForNewUser;
             emailSender.sendEmail(request.getEmail(), buildEmail(request.getFullname(), link));
             return tokenForNewUser;
