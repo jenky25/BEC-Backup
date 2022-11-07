@@ -39,7 +39,7 @@ public class Quiz {
     private String answerC;
     @Column(name="answer_d")
     private String answerD;
-    @Column(name="correct")
+    @Column(name="correct", length = 100)
     private String correct;
     @Column(name="created_at")
     private LocalDateTime createdAt;

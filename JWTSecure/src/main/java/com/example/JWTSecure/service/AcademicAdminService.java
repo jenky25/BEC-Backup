@@ -20,6 +20,7 @@ public interface AcademicAdminService {
     ResponseStatus deleteAcad(Long id);
     ResponseStatus addCourse(Course course);
     ResponseStatus deleteCourse(Long id);
-    ResponseStatus editCourse(Course course);
+    ResponseStatus editCourse(CourseDTO courseDTO);
     List<Course> getCourse();
+    SearchResultDTO<CourseDTO> getCoursePaging(CourseDTO courseDTO);
 }

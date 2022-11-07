@@ -49,14 +49,19 @@ public class AcademicAdminResource {
         return ResponseEntity.ok().body(academicAdminService.getCourse());
     }
 
+    @PostMapping("/get_course_paging")
+    public ResponseEntity<SearchResultDTO<CourseDTO>> getCoursePaging(@RequestBody CourseDTO courseDTO) {
+        return ResponseEntity.ok().body(academicAdminService.getCoursePaging(courseDTO));
+    }
+
     @DeleteMapping("/delete_course/{id}")
     public ResponseEntity<ResponseStatus> deleteCourse(@PathVariable Long id) {
         return ResponseEntity.ok().body(academicAdminService.deleteCourse(id));
     }
 
     @PutMapping("/edit_course")
-    public ResponseEntity<ResponseStatus> updateCourse(@RequestBody Course course) {
-        return ResponseEntity.ok().body(academicAdminService.editCourse(course));
+    public ResponseEntity<ResponseStatus> updateCourse(@RequestBody CourseDTO courseDTO) {
+        return ResponseEntity.ok().body(academicAdminService.editCourse(courseDTO));
     }
 
     @GetMapping("/get_room")

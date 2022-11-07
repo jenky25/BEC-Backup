@@ -4,6 +4,7 @@ import com.example.JWTSecure.DTO.*;
 import com.example.JWTSecure.domain.*;
 import com.example.JWTSecure.repo.*;
 import com.example.JWTSecure.repo.impl.AcademicAdminCustomRepo;
+import com.example.JWTSecure.repo.impl.CourseCustomRepo;
 import com.example.JWTSecure.repo.impl.QuizCustomRepo;
 import com.example.JWTSecure.repo.impl.RoomCustomRepo;
 import com.example.JWTSecure.service.AcademicAdminService;
@@ -14,7 +15,11 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.List;
 
@@ -32,7 +37,7 @@ public class AcademicAdminServiceImpl implements AcademicAdminService {
     private final CourseRepo courseRepo;
     private final AcademicAdminCustomRepo academicAdminCustomRepo;
     private final UserRepo userRepo;
-    private final AcademicAdminRepo acadRepo;
+    private final CourseCustomRepo courseCustomRepo;
     private final QuizCustomRepo quizCustomRepo;
     private final RoomCustomRepo roomCustomRepo;
 
@@ -319,10 +324,20 @@ public class AcademicAdminServiceImpl implements AcademicAdminService {
     }
 
     @Override
-    public ResponseStatus editCourse(Course course) {
+    public ResponseStatus editCourse(CourseDTO courseDTO) {
         ResponseStatus rs = new ResponseStatus();
-        if (course != null) {
+        Course course = new Course();
+        if (courseDTO != null) {
             try {
+                course.setId(courseDTO.getId());
+                course.setLevelId(courseDTO.getLevelId());
+                course.setName(courseDTO.getCourse_name());
+                course.setCreatedAt(courseRepo.findById(courseDTO.getId()).get().getUpdatedAt());
+                String timeStamp = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss").format(Calendar.getInstance().getTime());
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
+                LocalDateTime localDateTime = LocalDateTime.parse(timeStamp, formatter);
+                course.setUpdatedAt(localDateTime);
+                course.setNumberSlot(courseDTO.getNumberSlot());
                 courseRepo.save(course);
                 rs.setMessage("Ok");
                 rs.setState(true);
@@ -343,5 +358,39 @@ public class AcademicAdminServiceImpl implements AcademicAdminService {
                 return null;
             }
         return list;
+    }
+
+    @Override
+    public SearchResultDTO<CourseDTO> getCoursePaging(CourseDTO courseDTO) {
+        List<CourseDTO> dataResult;
+        SearchResultDTO<CourseDTO> searchResult = new SearchResultDTO<>();
+        try {
+            Integer totalRecord = courseCustomRepo.getTotal(courseDTO).size();
+            dataResult = courseCustomRepo.doSearch(courseDTO);
+            if (dataResult != null && !dataResult.isEmpty()) {
+                searchResult.setCode("0");
+                searchResult.setSuccess(true);
+                searchResult.setTitle("Success");
+                searchResult.setMessage("Success");
+                searchResult.setResultData(dataResult);
+                searchResult.setTotalRecordNoLimit(totalRecord);
+            } else {
+                searchResult.setCode("0");
+                searchResult.setSuccess(false);
+                searchResult.setTitle("Failure");
+                searchResult.setMessage("Failure");
+                searchResult.setResultData(Collections.emptyList());
+                searchResult.setTotalRecordNoLimit(0);
+            }
+            return searchResult;
+        } catch (Exception e) {
+            searchResult.setCode("0");
+            searchResult.setSuccess(false);
+            searchResult.setTitle("Failure");
+            searchResult.setMessage("Failure");
+            searchResult.setResultData(Collections.emptyList());
+            searchResult.setTotalRecordNoLimit(0);
+            return searchResult;
+        }
     }
 }
