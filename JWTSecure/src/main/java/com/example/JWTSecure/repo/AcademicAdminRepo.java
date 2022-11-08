@@ -7,4 +7,5 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface AcademicAdminRepo extends JpaRepository<AcademicAdmin, Long> {
     AcademicAdmin findByUserId(Long id);
+    void deleteByUserId(Long id);
 }

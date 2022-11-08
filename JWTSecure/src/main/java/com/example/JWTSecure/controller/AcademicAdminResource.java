@@ -19,6 +19,8 @@ public class AcademicAdminResource {
 
     private final AcademicAdminService academicAdminService;
     private final RoomService roomService;
+
+    //quiz
     @PostMapping("/add_quiz")
     public ResponseEntity<ResponseStatus> addQuiz(@RequestBody Quiz quiz) {
         return ResponseEntity.ok().body(academicAdminService.addQuiz(quiz));
@@ -27,6 +29,11 @@ public class AcademicAdminResource {
     @PostMapping("/get_quiz/{id}")
     public ResponseEntity<List<Quiz>> getQuiz(@PathVariable Long id) {
         return ResponseEntity.ok().body(academicAdminService.getQuiz(id));
+    }
+
+    @PostMapping("/get_quiz_paging")
+    public ResponseEntity<SearchResultDTO<QuizDTO>> getQuizPaging(@RequestBody QuizDTO quizDTO) {
+        return ResponseEntity.ok().body(academicAdminService.getQuizPaging(quizDTO));
     }
 
     @DeleteMapping("/delete_quiz/{id}")
@@ -39,6 +46,8 @@ public class AcademicAdminResource {
         return ResponseEntity.ok().body(academicAdminService.editQuiz(quiz));
     }
 
+
+    //course
     @PostMapping("/add_course")
     public ResponseEntity<ResponseStatus> addCourse(@RequestBody Course course) {
         return ResponseEntity.ok().body(academicAdminService.addCourse(course));
@@ -54,19 +63,26 @@ public class AcademicAdminResource {
         return ResponseEntity.ok().body(academicAdminService.getCoursePaging(courseDTO));
     }
 
-    @DeleteMapping("/delete_course/{id}")
-    public ResponseEntity<ResponseStatus> deleteCourse(@PathVariable Long id) {
-        return ResponseEntity.ok().body(academicAdminService.deleteCourse(id));
-    }
+//    @DeleteMapping("/delete_course/{id}")
+//    public ResponseEntity<ResponseStatus> deleteCourse(@PathVariable Long id) {
+//        return ResponseEntity.ok().body(academicAdminService.deleteCourse(id));
+//    }
 
     @PutMapping("/edit_course")
     public ResponseEntity<ResponseStatus> updateCourse(@RequestBody CourseDTO courseDTO) {
         return ResponseEntity.ok().body(academicAdminService.editCourse(courseDTO));
     }
 
-    @GetMapping("/get_room")
-    public ResponseEntity<SearchResultDTO<RoomDTO>> getRooms(@RequestBody RoomDTO roomDTO) {
+
+    //room
+    @PostMapping("/get_room_paging")
+    public ResponseEntity<SearchResultDTO<RoomDTO>> getRoomPaging(@RequestBody RoomDTO roomDTO) {
         return ResponseEntity.ok().body(academicAdminService.getRoom(roomDTO));
+    }
+
+    @GetMapping("/get_room")
+    public ResponseEntity<List<Room>> getRooms() {
+        return ResponseEntity.ok().body(academicAdminService.getRooms());
     }
 
     @PostMapping("/add_room")

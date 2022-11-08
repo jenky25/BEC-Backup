@@ -40,10 +40,12 @@ public class AcademicAdminServiceImpl implements AcademicAdminService {
     private final CourseCustomRepo courseCustomRepo;
     private final QuizCustomRepo quizCustomRepo;
     private final RoomCustomRepo roomCustomRepo;
+    private final ClassRepo classRepo;
+    private final RoomRepo roomRepo;
 
     @Override
     public List<Quiz> getQuiz(Long levelId) {
-        return quizCustomRepo.doSearch(levelId);
+        return quizCustomRepo.multipleChoice(levelId);
     }
 
     @Override
@@ -103,7 +105,7 @@ public class AcademicAdminServiceImpl implements AcademicAdminService {
         List<RoomDTO> dataResult;
         SearchResultDTO<RoomDTO> searchResult = new SearchResultDTO<>();
         try {
-            Integer totalRecord = roomCustomRepo.doSearch(roomDTO).size();
+            Integer totalRecord = roomCustomRepo.getTotal(roomDTO).size();
             dataResult = roomCustomRepo.doSearch(roomDTO);
             if (dataResult != null && !dataResult.isEmpty()) {
                 searchResult.setCode("0");
@@ -130,6 +132,17 @@ public class AcademicAdminServiceImpl implements AcademicAdminService {
             searchResult.setTotalRecordNoLimit(0);
             return searchResult;
         }
+    }
+
+    @Override
+    public List<Room> getRooms() {
+        List<Room> list = new ArrayList<>();
+        try {
+            list = roomRepo.findAll();
+        } catch (Exception ex) {
+            return null;
+        }
+        return list;
     }
 
     @Override
@@ -276,7 +289,8 @@ public class AcademicAdminServiceImpl implements AcademicAdminService {
         ResponseStatus responseStatus = new ResponseStatus();
         try {
             if (id != null) {
-                userRepo.deactive(id);
+                academicAdminRepo.deleteByUserId(id);
+                userRepo.deleteById(id);
                 responseStatus.setState(true);
                 responseStatus.setMessage("Success");
             } else {
@@ -312,6 +326,7 @@ public class AcademicAdminServiceImpl implements AcademicAdminService {
         ResponseStatus rs = new ResponseStatus();
         if (id != null) {
             try {
+                classRepo.deleteByCourseId(id);
                 courseRepo.deleteById(id);
                 rs.setMessage("Ok");
                 rs.setState(true);
@@ -367,6 +382,40 @@ public class AcademicAdminServiceImpl implements AcademicAdminService {
         try {
             Integer totalRecord = courseCustomRepo.getTotal(courseDTO).size();
             dataResult = courseCustomRepo.doSearch(courseDTO);
+            if (dataResult != null && !dataResult.isEmpty()) {
+                searchResult.setCode("0");
+                searchResult.setSuccess(true);
+                searchResult.setTitle("Success");
+                searchResult.setMessage("Success");
+                searchResult.setResultData(dataResult);
+                searchResult.setTotalRecordNoLimit(totalRecord);
+            } else {
+                searchResult.setCode("0");
+                searchResult.setSuccess(false);
+                searchResult.setTitle("Failure");
+                searchResult.setMessage("Failure");
+                searchResult.setResultData(Collections.emptyList());
+                searchResult.setTotalRecordNoLimit(0);
+            }
+            return searchResult;
+        } catch (Exception e) {
+            searchResult.setCode("0");
+            searchResult.setSuccess(false);
+            searchResult.setTitle("Failure");
+            searchResult.setMessage("Failure");
+            searchResult.setResultData(Collections.emptyList());
+            searchResult.setTotalRecordNoLimit(0);
+            return searchResult;
+        }
+    }
+
+    @Override
+    public SearchResultDTO<QuizDTO> getQuizPaging(QuizDTO quizDTO) {
+        List<QuizDTO> dataResult;
+        SearchResultDTO<QuizDTO> searchResult = new SearchResultDTO<>();
+        try {
+            Integer totalRecord = quizCustomRepo.getTotal(quizDTO).size();
+            dataResult = quizCustomRepo.doSearch(quizDTO);
             if (dataResult != null && !dataResult.isEmpty()) {
                 searchResult.setCode("0");
                 searchResult.setSuccess(true);

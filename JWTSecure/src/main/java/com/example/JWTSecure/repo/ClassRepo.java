@@ -10,4 +10,5 @@ import org.springframework.stereotype.Repository;
 public interface ClassRepo extends JpaRepository<Classes, Long> {
 
     Classes findTopByOrderByIdDesc();
+    void deleteByCourseId(Long id);
 }

@@ -3,6 +3,7 @@ package com.example.JWTSecure.service;
 import com.example.JWTSecure.DTO.*;
 import com.example.JWTSecure.domain.Course;
 import com.example.JWTSecure.domain.Quiz;
+import com.example.JWTSecure.domain.Room;
 
 import java.util.List;
 
@@ -13,6 +14,7 @@ public interface AcademicAdminService {
     ResponseStatus editQuiz(Quiz quiz);
     ResponseStatus addQuiz(Quiz quiz);
     SearchResultDTO<RoomDTO> getRoom(RoomDTO roomDTO);
+    List<Room> getRooms();
     SearchResultDTO<AcademicAdminDTO> getAllAcad(AcademicAdminDTO academicAdminDTO);
     ResponseStatus addAcad(AddAcademicAdminDTO addAcademicAdminDTO);
     AcademicAdminDTO viewProfile(AcademicAdminDTO academicAdminDTO);
@@ -23,4 +25,5 @@ public interface AcademicAdminService {
     ResponseStatus editCourse(CourseDTO courseDTO);
     List<Course> getCourse();
     SearchResultDTO<CourseDTO> getCoursePaging(CourseDTO courseDTO);
+    SearchResultDTO<QuizDTO> getQuizPaging(QuizDTO quizDTO);
 }

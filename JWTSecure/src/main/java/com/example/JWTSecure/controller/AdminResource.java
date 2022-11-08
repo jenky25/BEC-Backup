@@ -38,9 +38,9 @@ public class AdminResource {
         return ResponseEntity.ok().body(teacherService.getAllTeacher(teacherDTO));
     }
 
-    @PutMapping("/delete_teacher")
-    public ResponseEntity<ResponseStatus> deleteTeacher(@RequestBody AddTeacherDTO addTeacherDTO) {
-        return ResponseEntity.ok().body(teacherService.deleteTeacher(addTeacherDTO.getId()));
+    @DeleteMapping("/delete_teacher/{id}")
+    public ResponseEntity<ResponseStatus> deleteTeacher(@RequestBody Long id) {
+        return ResponseEntity.ok().body(teacherService.deleteTeacher(id));
     }
 
     @PutMapping("/edit_teacher")
@@ -63,9 +63,9 @@ public class AdminResource {
         return ResponseEntity.ok().body(academicAdminService.editAcad(addAcademicAdminDTO));
     }
 
-    @PutMapping("/delete_acad")
-    public ResponseEntity<ResponseStatus> deleteAcad(@RequestBody AddAcademicAdminDTO addAcademicAdminDTO) {
-        return ResponseEntity.ok().body(academicAdminService.deleteAcad(addAcademicAdminDTO.getId()));
+    @DeleteMapping("/delete_acad/{id}")
+    public ResponseEntity<ResponseStatus> deleteAcad(@PathVariable Long id) {
+        return ResponseEntity.ok().body(academicAdminService.deleteAcad(id));
     }
 
     @PostMapping("/get_all_class")

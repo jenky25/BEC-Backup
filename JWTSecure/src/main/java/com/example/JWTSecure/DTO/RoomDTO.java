@@ -14,8 +14,8 @@ public class RoomDTO implements Serializable {
     private Long id;
     private String roomname;
     private Integer capacity;
-    private LocalDateTime createdat;
-    private LocalDateTime updatedat;
+    private String createdat;
+    private String updatedat;
     private String key_search;
     private int page;
     private int pageSize;
