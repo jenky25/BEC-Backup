@@ -2,7 +2,6 @@ package com.example.JWTSecure.controller;
 import com.example.JWTSecure.DTO.AddTeacherDTO;
 import com.example.JWTSecure.DTO.ResponseStatus;
 import com.example.JWTSecure.DTO.TeacherDTO;
-
 import com.example.JWTSecure.service.TeacherService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

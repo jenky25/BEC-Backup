@@ -1,5 +1,4 @@
 package com.example.JWTSecure.controller;
-
 import com.example.JWTSecure.DTO.*;
 import com.example.JWTSecure.DTO.ResponseStatus;
 import com.example.JWTSecure.domain.Course;
@@ -46,7 +45,6 @@ public class AcademicAdminResource {
         return ResponseEntity.ok().body(academicAdminService.editQuiz(quiz));
     }
 
-
     //course
     @PostMapping("/add_course")
     public ResponseEntity<ResponseStatus> addCourse(@RequestBody Course course) {
@@ -63,16 +61,10 @@ public class AcademicAdminResource {
         return ResponseEntity.ok().body(academicAdminService.getCoursePaging(courseDTO));
     }
 
-//    @DeleteMapping("/delete_course/{id}")
-//    public ResponseEntity<ResponseStatus> deleteCourse(@PathVariable Long id) {
-//        return ResponseEntity.ok().body(academicAdminService.deleteCourse(id));
-//    }
-
     @PutMapping("/edit_course")
     public ResponseEntity<ResponseStatus> updateCourse(@RequestBody CourseDTO courseDTO) {
         return ResponseEntity.ok().body(academicAdminService.editCourse(courseDTO));
     }
-
 
     //room
     @PostMapping("/get_room_paging")
@@ -96,7 +88,7 @@ public class AcademicAdminResource {
     }
 
     @DeleteMapping("/delete_room")
-    public ResponseEntity<ResponseStatus> deleteRoom(@RequestBody Room room) {
-        return ResponseEntity.ok().body(roomService.deleteRoom(room));
+    public ResponseEntity<ResponseStatus> deleteRoom(@PathVariable Long id) {
+        return ResponseEntity.ok().body(roomService.updateActiveRoom(id));
     }
 }

@@ -1,7 +1,5 @@
 package com.example.JWTSecure.DTO;
 
-import javax.persistence.Column;
-
 public class RegistrationRequest {
 
     private String username;

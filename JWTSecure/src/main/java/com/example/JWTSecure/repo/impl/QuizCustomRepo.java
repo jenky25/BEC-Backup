@@ -1,6 +1,6 @@
 package com.example.JWTSecure.repo.impl;
 
-import com.example.JWTSecure.DTO.ClassDTO;
+
 import com.example.JWTSecure.DTO.QuizDTO;
 import com.example.JWTSecure.domain.Quiz;
 import org.hibernate.Session;
@@ -60,7 +60,7 @@ public class QuizCustomRepo {
                         "from quiz q  ");
         sql.append(" WHERE 1 = 1 ");
         if(quizDTO.getKey_search()!=null){
-            sql.append(" AND (UPPER(q.question LIKE CONCAT('%', UPPER(:question), '%') ESCAPE '&') ");
+            sql.append(" AND (UPPER(q.question) LIKE CONCAT('%', UPPER(:question), '%') ESCAPE '&') ");
         }
         NativeQuery<QuizDTO> query = ((Session) entityManager.getDelegate()).createNativeQuery(sql.toString());
 
@@ -95,7 +95,7 @@ public class QuizCustomRepo {
                         "from quiz q  ");
         sql.append(" WHERE 1 = 1 ");
         if(quizDTO.getKey_search()!=null){
-            sql.append(" AND (UPPER(q.question LIKE CONCAT('%', UPPER(:question), '%') ESCAPE '&') ");
+            sql.append("   AND (UPPER(q.question) LIKE CONCAT('%', UPPER(:question), '%') ESCAPE '&') ");
         }
         NativeQuery<QuizDTO> query = ((Session) entityManager.getDelegate()).createNativeQuery(sql.toString());
 

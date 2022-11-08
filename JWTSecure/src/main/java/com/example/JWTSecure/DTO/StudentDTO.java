@@ -1,15 +1,10 @@
 package com.example.JWTSecure.DTO;
-
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
 import java.io.Serializable;
-import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 @Getter
 @Setter

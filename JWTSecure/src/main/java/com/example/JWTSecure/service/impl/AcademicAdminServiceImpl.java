@@ -73,6 +73,11 @@ public class AcademicAdminServiceImpl implements AcademicAdminService {
         ResponseStatus rs = new ResponseStatus();
         if (quiz != null) {
             try {
+                quiz.setCreatedAt(courseRepo.findById(quiz.getId()).get().getUpdatedAt());
+                String timeStamp = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss").format(Calendar.getInstance().getTime());
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
+                LocalDateTime localDateTime = LocalDateTime.parse(timeStamp, formatter);
+                quiz.setUpdatedAt(localDateTime);
                 quizRepo.save(quiz);
                 rs.setMessage("Ok");
                 rs.setState(true);
@@ -311,23 +316,6 @@ public class AcademicAdminServiceImpl implements AcademicAdminService {
         if (course != null) {
             try {
                 courseRepo.save(course);
-                rs.setMessage("Ok");
-                rs.setState(true);
-            } catch (Exception ex) {
-                rs.setMessage("Failure");
-                rs.setState(false);
-            }
-        }
-        return rs;
-    }
-
-    @Override
-    public ResponseStatus deleteCourse(Long id) {
-        ResponseStatus rs = new ResponseStatus();
-        if (id != null) {
-            try {
-                classRepo.deleteByCourseId(id);
-                courseRepo.deleteById(id);
                 rs.setMessage("Ok");
                 rs.setState(true);
             } catch (Exception ex) {

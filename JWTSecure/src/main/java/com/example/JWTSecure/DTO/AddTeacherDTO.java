@@ -1,13 +1,6 @@
 package com.example.JWTSecure.DTO;
-
-import com.example.JWTSecure.domain.Teacher;
-import com.example.JWTSecure.domain.User;
 import lombok.Getter;
 import lombok.Setter;
-
-
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 
 @Getter
