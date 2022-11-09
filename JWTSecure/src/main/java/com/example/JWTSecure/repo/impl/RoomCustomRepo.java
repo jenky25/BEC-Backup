@@ -25,7 +25,7 @@ public class RoomCustomRepo {
 
         StringBuilder sql = new StringBuilder()
                 .append("select id, roomname, capacity," +
-                        "created_at as createdAt, updated_at as updatedAt " +
+                        "created_at as createdAt, updated_at as updatedAt, active " +
                         "from room ");
         sql.append(" WHERE 1 = 1 ");
         if (roomDTO.getKey_search()!=null) {
@@ -43,6 +43,7 @@ public class RoomCustomRepo {
         query.addScalar("capacity", new IntegerType());
         query.addScalar("createdat", new StringType());
         query.addScalar("updatedat", new StringType());
+        query.addScalar("active", new BooleanType());
 
 
         query.setResultTransformer(Transformers.aliasToBean(RoomDTO.class));
@@ -57,7 +58,7 @@ public class RoomCustomRepo {
 
         StringBuilder sql = new StringBuilder()
                 .append("select id, roomname, capacity," +
-                        "created_at as createdAt, updated_at as updatedAt " +
+                        "created_at as createdAt, updated_at as updatedAt, active " +
                         "from room ");
         sql.append(" WHERE 1 = 1 ");
         if (roomDTO.getKey_search()!=null) {
@@ -75,6 +76,7 @@ public class RoomCustomRepo {
         query.addScalar("capacity", new IntegerType());
         query.addScalar("createdat", new StringType());
         query.addScalar("updatedat", new StringType());
+        query.addScalar("active", new BooleanType());
 
 
         query.setResultTransformer(Transformers.aliasToBean(RoomDTO.class));

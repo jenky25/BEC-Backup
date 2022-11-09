@@ -13,6 +13,7 @@ public class RoomDTO implements Serializable {
     private Integer capacity;
     private String createdat;
     private String updatedat;
+    private boolean active;
     private String key_search;
     private int page;
     private int pageSize;
