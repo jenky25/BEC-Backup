@@ -13,6 +13,7 @@ public class CourseDTO implements Serializable {
     private Long id;
     private Long levelId;
     private String course_name;
+    private Double fee;
     private String level;
     private String createdAt;
     private String updatedAt;

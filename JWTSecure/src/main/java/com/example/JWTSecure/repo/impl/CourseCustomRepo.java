@@ -5,10 +5,7 @@ import com.example.JWTSecure.DTO.TeacherDTO;
 import org.hibernate.Session;
 import org.hibernate.query.NativeQuery;
 import org.hibernate.transform.Transformers;
-import org.hibernate.type.BooleanType;
-import org.hibernate.type.IntegerType;
-import org.hibernate.type.LongType;
-import org.hibernate.type.StringType;
+import org.hibernate.type.*;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
@@ -25,7 +22,7 @@ public class CourseCustomRepo {
 
         StringBuilder sql = new StringBuilder()
                 .append("select c.id, c.level_id as levelId,\n" +
-                        "c.name as course_name, l.name as level, c.created_at as createdAt,\n" +
+                        "c.name as course_name, c.fee as fee, l.name as level, c.created_at as createdAt,\n" +
                         "c.updated_at as updatedAt, c.number_slot as numberSlot\n" +
                         "from course c join level l on c.level_id = l.id");
         sql.append(" WHERE 1 = 1 ");
@@ -42,6 +39,7 @@ public class CourseCustomRepo {
         query.addScalar("id", new LongType());
         query.addScalar("levelId", new LongType());
         query.addScalar("course_name", new StringType());
+        query.addScalar("fee", new DoubleType());
         query.addScalar("level", new StringType());
         query.addScalar("createdAt", new StringType());
         query.addScalar("updatedAt", new StringType());
@@ -59,7 +57,7 @@ public class CourseCustomRepo {
 
         StringBuilder sql = new StringBuilder()
                 .append("select c.id, c.level_id as levelId,\n" +
-                        "c.name as course_name, l.name as level, c.created_at as createdAt,\n" +
+                        "c.name as course_name, c.fee as fee, l.name as level, c.created_at as createdAt,\n" +
                         "c.updated_at as updatedAt, c.number_slot as numberSlot\n" +
                         "from course c join level l on c.level_id = l.id");
         sql.append(" WHERE 1 = 1 ");
@@ -76,6 +74,7 @@ public class CourseCustomRepo {
         query.addScalar("id", new LongType());
         query.addScalar("levelId", new LongType());
         query.addScalar("course_name", new StringType());
+        query.addScalar("fee", new DoubleType());
         query.addScalar("level", new StringType());
         query.addScalar("createdAt", new StringType());
         query.addScalar("updatedAt", new StringType());

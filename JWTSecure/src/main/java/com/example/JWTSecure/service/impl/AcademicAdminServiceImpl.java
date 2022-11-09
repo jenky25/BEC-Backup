@@ -73,7 +73,9 @@ public class AcademicAdminServiceImpl implements AcademicAdminService {
         ResponseStatus rs = new ResponseStatus();
         if (quiz != null) {
             try {
-                quiz.setCreatedAt(courseRepo.findById(quiz.getId()).get().getUpdatedAt());
+                quiz.setAcaId(quizRepo.findById(quiz.getId()).get().getAcaId());
+                quiz.setLevelId(quizRepo.findById(quiz.getId()).get().getLevelId());
+                quiz.setCreatedAt(quizRepo.findById(quiz.getId()).get().getUpdatedAt());
                 String timeStamp = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss").format(Calendar.getInstance().getTime());
                 DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
                 LocalDateTime localDateTime = LocalDateTime.parse(timeStamp, formatter);

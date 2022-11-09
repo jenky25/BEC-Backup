@@ -28,6 +28,8 @@ public class Course {
     private Long levelId;
     @Column(name="name")
     private String name;
+    @Column(name="fee")
+    private Double fee;
     @Column(name="created_at")
     private LocalDateTime createdAt;
     @Column(name="updated_at")
