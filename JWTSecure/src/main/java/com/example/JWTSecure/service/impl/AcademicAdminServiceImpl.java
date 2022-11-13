@@ -94,8 +94,13 @@ public class AcademicAdminServiceImpl implements AcademicAdminService {
     @Override
     public ResponseStatus addQuiz(Quiz quiz) {
         ResponseStatus rs = new ResponseStatus();
+        String timeStamp = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss").format(Calendar.getInstance().getTime());
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
+        LocalDateTime localDateTime = LocalDateTime.parse(timeStamp, formatter);
         if (quiz != null) {
             try {
+                quiz.setCreatedAt(localDateTime);
+                quiz.setUpdatedAt(localDateTime);
                 quizRepo.save(quiz);
                 rs.setMessage("Ok");
                 rs.setState(true);

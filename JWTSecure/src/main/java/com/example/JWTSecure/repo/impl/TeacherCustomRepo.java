@@ -21,7 +21,7 @@ public class TeacherCustomRepo {
 
         StringBuilder sql = new StringBuilder()
                 .append("select t.id as teacher_Id, t.user_id as user_Id, t.role_id as role_Id, \n" +
-                        "u.username as user_name, u.fullname as full_name, u.email as email, u.phone as phone, u.address as address, u.active as active\n" +
+                        "u.username as user_name, u.fullname as full_name, t.image_url as imageUrl,u.email as email, u.phone as phone, u.address as address, u.active as active\n" +
                         "from teacher t join users u on t.user_id = u.id");
         sql.append(" WHERE 1 = 1 ");
         if (teacherDTO.getKey_search()!=null) {
@@ -39,6 +39,7 @@ public class TeacherCustomRepo {
         query.addScalar("role_Id", new LongType());
         query.addScalar("user_name", new StringType());
         query.addScalar("full_name", new StringType());
+        query.addScalar("imageUrl", new StringType());
         query.addScalar("email", new StringType());
         query.addScalar("phone", new StringType());
         query.addScalar("address", new StringType());
@@ -56,7 +57,7 @@ public class TeacherCustomRepo {
 
         StringBuilder sql = new StringBuilder()
                 .append("select t.id as teacher_Id, t.user_id as user_Id, t.role_id as role_Id, \n" +
-                        "u.username as user_name, u.fullname as full_name, u.email as email, u.phone as phone, u.address as address, u.active as active\n" +
+                        "u.username as user_name, u.fullname as full_name, t.image_url as imageUrl, u.email as email, u.phone as phone, u.address as address, u.active as active\n" +
                         "from teacher t join users u on t.user_id = u.id");
         sql.append(" WHERE 1 = 1 ");
         if (teacherDTO.getKey_search()!=null) {
@@ -74,6 +75,7 @@ public class TeacherCustomRepo {
         query.addScalar("role_Id", new LongType());
         query.addScalar("user_name", new StringType());
         query.addScalar("full_name", new StringType());
+        query.addScalar("imageUrl", new StringType());
         query.addScalar("email", new StringType());
         query.addScalar("phone", new StringType());
         query.addScalar("address", new StringType());

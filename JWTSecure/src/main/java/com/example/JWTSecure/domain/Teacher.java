@@ -27,4 +27,6 @@ public class Teacher {
     private Long userId;
     @Column(name="role_id")
     private Long roleId;
+    @Column(name="image_url")
+    private String imageUrl;
 }

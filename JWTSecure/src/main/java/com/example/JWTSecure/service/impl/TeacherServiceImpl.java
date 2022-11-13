@@ -110,6 +110,7 @@ public class TeacherServiceImpl implements TeacherService {
 
                     teacher.setUserId(userRepo.findByUsername(addTeacherDTO.getUser_name()).getId());
                     teacher.setRoleId(3L);
+                    teacher.setImageUrl(addTeacherDTO.getImageUrl());
                     teacherRepo.save(teacher);
                     rs.setMessage("Ok");
                     rs.setState(true);

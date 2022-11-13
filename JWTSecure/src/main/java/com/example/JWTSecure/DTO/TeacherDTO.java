@@ -14,6 +14,7 @@ public class TeacherDTO implements Serializable {
     private Long role_Id;
     private String user_name;
     private String full_name;
+    private String imageUrl;
     private String email;
     private String phone;
     private String address;

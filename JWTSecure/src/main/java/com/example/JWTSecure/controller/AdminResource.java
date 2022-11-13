@@ -1,11 +1,9 @@
 package com.example.JWTSecure.controller;
 import com.example.JWTSecure.DTO.*;
 import com.example.JWTSecure.DTO.ResponseStatus;
+import com.example.JWTSecure.domain.Slot;
 import com.example.JWTSecure.domain.Teacher;
-import com.example.JWTSecure.service.AcademicAdminService;
-import com.example.JWTSecure.service.ClassService;
-import com.example.JWTSecure.service.StudentService;
-import com.example.JWTSecure.service.TeacherService;
+import com.example.JWTSecure.service.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -21,8 +19,14 @@ public class AdminResource {
     private final AcademicAdminService academicAdminService;
     private final ClassService classService;
     private final StudentService studentService;
+    private final SlotService slotService;
 
-    @GetMapping("/getall")
+    @GetMapping("/get_slot")
+    public ResponseEntity<List<Slot>> getSlot() {
+        return ResponseEntity.ok().body(slotService.getSlot());
+    }
+
+    @GetMapping("/get_teacher")
     public ResponseEntity<List<Teacher>> getTeachers() {
         return ResponseEntity.ok().body(teacherService.list());
     }

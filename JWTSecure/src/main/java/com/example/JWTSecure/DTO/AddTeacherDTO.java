@@ -11,6 +11,7 @@ public class AddTeacherDTO {
     private Long user_Id;
     private String user_name;
     private String full_name;
+    private String imageUrl;
     private String password;
     private String email;
     private String phone;
