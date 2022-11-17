@@ -26,6 +26,8 @@ public class Student {
     private Long userId;
     @Column(name="role_id")
     private Long roleId;
+    @Column(name="is_paid")
+    private Boolean isPaid;
 
     public Student(Long id, Long userId, Long roleId) {
         this.id = id;

@@ -14,6 +14,89 @@ public class StudentCustomRepo {
     @PersistenceContext
     private EntityManager entityManager;
 
+    public List<StudentDTO> doSearchPending(StudentDTO studentDTO) {
+
+        StringBuilder sql = new StringBuilder()
+                .append("select s.id as student_Id, s.user_id as user_Id,\n" +
+                        "u.username as user_name, u.fullname as full_name, sic.is_paid as isPaid,\n" +
+                        "u.email as email, u.phone as phone, u.address as address,\n" +
+                        "u.active as active, c.name as class_name, co.name as course_name, c.start_date as start_date\n" +
+                        "from student s join users u on s.user_id = u.id\n" +
+                        "join student_in_class sic on s.id = sic.student_id\n" +
+                        "join class c on sic.class_id = c.id\n" +
+                        "join course co on c.course_id = co.id");
+        sql.append(" WHERE 1 = 1 AND sic.is_paid = false");
+        if (studentDTO.getKey_search()!=null) {
+            sql.append(" AND (UPPER(u.fullname) LIKE CONCAT('%', UPPER(:full_name), '%') ESCAPE '&') ");
+        }
+
+        NativeQuery<StudentDTO> query = ((Session) entityManager.getDelegate()).createNativeQuery(sql.toString());
+
+        if (studentDTO.getKey_search()!=null) {
+            query.setParameter("full_name", "%"+studentDTO.getKey_search()+"%");
+        }
+
+        query.addScalar("student_Id", new LongType());
+        query.addScalar("user_Id", new LongType());
+        query.addScalar("user_name", new StringType());
+        query.addScalar("full_name", new StringType());
+        query.addScalar("isPaid", new BooleanType());
+        query.addScalar("email", new StringType());
+        query.addScalar("phone", new StringType());
+        query.addScalar("address", new StringType());
+        query.addScalar("active", new BooleanType());
+        query.addScalar("class_name", new StringType());
+        query.addScalar("course_name", new StringType());
+        query.addScalar("start_date", new StringType());
+
+        query.setResultTransformer(Transformers.aliasToBean(StudentDTO.class));
+        if (null != String.valueOf(studentDTO.getPage())) {
+            query.setMaxResults(studentDTO.getPageSize());
+            query.setFirstResult(((studentDTO.getPage() - 1) * studentDTO.getPageSize()));
+        }
+        return query.list();
+    }
+
+    public List<StudentDTO> getTotalPending(StudentDTO studentDTO) {
+
+        StringBuilder sql = new StringBuilder()
+                .append("select s.id as student_Id, s.user_id as user_Id,\n" +
+                        "u.username as user_name, u.fullname as full_name, sic.is_paid as isPaid,\n" +
+                        "u.email as email, u.phone as phone, u.address as address,\n" +
+                        "u.active as active, c.name as class_name, co.name as course_name, c.start_date as start_date\n" +
+                        "from student s join users u on s.user_id = u.id\n" +
+                        "join student_in_class sic on s.id = sic.student_id\n" +
+                        "join class c on sic.class_id = c.id\n" +
+                        "join course co on c.course_id = co.id");
+        sql.append(" WHERE 1 = 1 AND sic.is_paid = false");
+        if (studentDTO.getKey_search()!=null) {
+            sql.append(" AND (UPPER(u.fullname) LIKE CONCAT('%', UPPER(:full_name), '%') ESCAPE '&') ");
+        }
+
+        NativeQuery<StudentDTO> query = ((Session) entityManager.getDelegate()).createNativeQuery(sql.toString());
+
+        if (studentDTO.getKey_search()!=null) {
+            query.setParameter("full_name", "%"+studentDTO.getKey_search()+"%");
+        }
+
+        query.addScalar("student_Id", new LongType());
+        query.addScalar("user_Id", new LongType());
+        query.addScalar("user_name", new StringType());
+        query.addScalar("full_name", new StringType());
+        query.addScalar("isPaid", new BooleanType());
+        query.addScalar("email", new StringType());
+        query.addScalar("phone", new StringType());
+        query.addScalar("address", new StringType());
+        query.addScalar("active", new BooleanType());
+        query.addScalar("class_name", new StringType());
+        query.addScalar("course_name", new StringType());
+        query.addScalar("start_date", new StringType());
+
+
+        query.setResultTransformer(Transformers.aliasToBean(StudentDTO.class));
+        return query.list();
+    }
+
     public List<StudentDTO> doSearch(StudentDTO studentDTO) {
 
         StringBuilder sql = new StringBuilder()

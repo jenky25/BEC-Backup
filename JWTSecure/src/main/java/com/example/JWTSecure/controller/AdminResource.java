@@ -1,6 +1,8 @@
 package com.example.JWTSecure.controller;
 import com.example.JWTSecure.DTO.*;
 import com.example.JWTSecure.DTO.ResponseStatus;
+import com.example.JWTSecure.domain.Classes;
+import com.example.JWTSecure.domain.Curriculum;
 import com.example.JWTSecure.domain.Slot;
 import com.example.JWTSecure.domain.Teacher;
 import com.example.JWTSecure.service.*;
@@ -27,7 +29,7 @@ public class AdminResource {
     }
 
     @GetMapping("/get_teacher")
-    public ResponseEntity<List<Teacher>> getTeachers() {
+    public ResponseEntity<List<TeacherDTO>> getTeachers() {
         return ResponseEntity.ok().body(teacherService.list());
     }
 
@@ -41,9 +43,14 @@ public class AdminResource {
         return ResponseEntity.ok().body(teacherService.getAllTeacher(teacherDTO));
     }
 
-    @DeleteMapping("/delete_teacher/{id}")
-    public ResponseEntity<ResponseStatus> deleteTeacher(@RequestBody Long id) {
-        return ResponseEntity.ok().body(teacherService.deleteTeacher(id));
+//    @DeleteMapping("/delete_teacher/{id}")
+//    public ResponseEntity<ResponseStatus> deleteTeacher(@RequestBody Long id) {
+//        return ResponseEntity.ok().body(teacherService.deleteTeacher(id));
+//    }
+
+    @PutMapping("/delete_teacher")
+    public ResponseEntity<ResponseStatus> deleteTeacher(@RequestBody AddTeacherDTO addTeacherDTO) {
+        return ResponseEntity.ok().body(teacherService.deleteTeacher(addTeacherDTO.getId()));
     }
 
     @PutMapping("/edit_teacher")
@@ -66,9 +73,14 @@ public class AdminResource {
         return ResponseEntity.ok().body(academicAdminService.editAcad(addAcademicAdminDTO));
     }
 
-    @DeleteMapping("/delete_acad/{id}")
-    public ResponseEntity<ResponseStatus> deleteAcad(@PathVariable Long id) {
-        return ResponseEntity.ok().body(academicAdminService.deleteAcad(id));
+    @PutMapping("/delete_acad")
+    public ResponseEntity<ResponseStatus> deleteAcad(@RequestBody AddAcademicAdminDTO addAcademicAdminDTO) {
+        return ResponseEntity.ok().body(academicAdminService.deleteAcad(addAcademicAdminDTO.getId()));
+    }
+
+    @PutMapping("/disable_class")
+    public ResponseEntity<ResponseStatus> disableClass(@RequestBody Classes classes) {
+        return ResponseEntity.ok().body(classService.disableClass(classes.getId()));
     }
 
     @PostMapping("/get_all_class")
@@ -89,6 +101,26 @@ public class AdminResource {
     @PostMapping("/detail_student_class/{id}")
     public ResponseEntity<List<StudentDTO>> detailStudentClass(@PathVariable Long id) {
         return ResponseEntity.ok().body(studentService.detailStudentClass(id));
+    }
+
+    @PostMapping("/get_student_pending")
+    public ResponseEntity<SearchResultDTO<StudentDTO>> searchStudentPending(@RequestBody StudentDTO studentDTO) {
+        return ResponseEntity.ok().body(studentService.getStudentPending(studentDTO));
+    }
+
+    @PostMapping("/add_curriculum")
+    public ResponseEntity<ResponseStatus> addCurriculum(@RequestBody Curriculum curriculum) {
+        return ResponseEntity.ok().body(studentService.addCurriculum(curriculum));
+    }
+
+    @PutMapping("/update_pending")
+    public ResponseEntity<ResponseStatus> updatePending(@RequestBody StudentDTO studentDTO) {
+        return ResponseEntity.ok().body(studentService.updatePending(studentDTO.getStudent_Id()));
+    }
+
+    @DeleteMapping("/delete_pending/{id}")
+    public ResponseEntity<ResponseStatus> deletePending(@PathVariable Long id) {
+        return ResponseEntity.ok().body(studentService.deletePending(id));
     }
 
     @PostMapping("/add_class")

@@ -20,10 +20,12 @@ public class StudentDTO implements Serializable {
     private String course_name;
     private List<String> courses;
     private List<String> classes;
+    private Boolean isPaid;
     private String email;
     private String phone;
     private String address;
     private boolean active;
+    private String start_date;
     private LocalDateTime from_date;
     private LocalDateTime to_date;
     private String key_search;

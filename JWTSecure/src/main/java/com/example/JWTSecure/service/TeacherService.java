@@ -2,6 +2,7 @@ package com.example.JWTSecure.service;
 
 import com.example.JWTSecure.DTO.*;
 import com.example.JWTSecure.domain.Activity;
+import com.example.JWTSecure.domain.Classes;
 import com.example.JWTSecure.domain.Teacher;
 import com.example.JWTSecure.domain.User;
 
@@ -15,6 +16,7 @@ public interface TeacherService {
     ResponseStatus editTeacher(AddTeacherDTO addTeacherDTO);
     ResponseStatus createAct(Activity activity);
     ResponseStatus deleteTeacher(Long id);
-    List<Teacher> list();
-
+    List<TeacherDTO> list();
+    List<Classes> getClasses(Long teacher_id);
+    TimeTableDTO getTimetableByClasses(Long id);
 }

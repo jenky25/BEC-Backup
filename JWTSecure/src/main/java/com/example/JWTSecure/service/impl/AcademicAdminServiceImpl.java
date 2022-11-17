@@ -301,8 +301,7 @@ public class AcademicAdminServiceImpl implements AcademicAdminService {
         ResponseStatus responseStatus = new ResponseStatus();
         try {
             if (id != null) {
-                academicAdminRepo.deleteByUserId(id);
-                userRepo.deleteById(id);
+                userRepo.deactiveAca(id);
                 responseStatus.setState(true);
                 responseStatus.setMessage("Success");
             } else {

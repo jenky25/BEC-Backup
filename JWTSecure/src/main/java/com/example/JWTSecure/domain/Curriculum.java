@@ -23,8 +23,6 @@ public class Curriculum {
             generator = "curriculum_sequence"
     )
     private Long id;
-    @Column(name="aca_id")
-    private Long acaId;
     @Column(name="course_id")
     private Long courseId;
     @Column(name="name")

@@ -97,7 +97,9 @@ public class ClassServiceImpl implements ClassService {
         try {
             if (classDTO != null) {
                 classDTO.setActive(true);
-
+                if (classRepo.findByName(classDTO.getClass_name()) != null) {
+                    message.append("Class ");
+                }
                 if (classCustomRepo.checkRoomActive(classDTO) != null) {
                     message.append("Room ");
                 }
@@ -156,5 +158,19 @@ public class ClassServiceImpl implements ClassService {
             rs.setState(false);
             return rs;
         }
+    }
+
+    @Override
+    public ResponseStatus disableClass(Long id) {
+        ResponseStatus responseStatus = new ResponseStatus();
+        try {
+            classRepo.deActive(id);
+            responseStatus.setState(true);
+            responseStatus.setMessage("Success");
+        } catch (Exception ex) {
+            responseStatus.setState(false);
+            responseStatus.setMessage("Failure");
+        }
+        return responseStatus;
     }
 }

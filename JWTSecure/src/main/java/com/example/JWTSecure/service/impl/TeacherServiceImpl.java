@@ -2,14 +2,14 @@ package com.example.JWTSecure.service.impl;
 
 import com.example.JWTSecure.DTO.*;
 import com.example.JWTSecure.domain.Activity;
+import com.example.JWTSecure.domain.Classes;
 import com.example.JWTSecure.domain.Teacher;
 import com.example.JWTSecure.domain.User;
-import com.example.JWTSecure.repo.AcademicAdminRepo;
-import com.example.JWTSecure.repo.ActivityRepo;
-import com.example.JWTSecure.repo.TeacherRepo;
-import com.example.JWTSecure.repo.UserRepo;
+import com.example.JWTSecure.repo.*;
 import com.example.JWTSecure.repo.impl.TeacherCustomRepo;
+import com.example.JWTSecure.repo.impl.TimeTableCustomRepo;
 import com.example.JWTSecure.service.TeacherService;
+import com.nimbusds.jose.util.Pair;
 import com.nimbusds.oauth2.sdk.util.StringUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -18,8 +18,10 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 import java.util.*;
 
 @Service
@@ -34,6 +36,8 @@ public class TeacherServiceImpl implements TeacherService {
     private final UserRepo userRepo;
     private final TeacherCustomRepo teacherCustomRepo;
     private final ActivityRepo activityRepo;
+    private final ClassRepo classRepo;
+    private final TimeTableCustomRepo timeTableCustomRepo;
 
     public SearchResultDTO<TeacherDTO> getAllTeacher(TeacherDTO productDTO) {
         List<TeacherDTO> dataResult;
@@ -224,7 +228,7 @@ public class TeacherServiceImpl implements TeacherService {
         ResponseStatus responseStatus = new ResponseStatus();
         try {
             if (id != null) {
-                userRepo.deactive(id);
+                userRepo.deactive(teacherRepo.findByUserId(id).getUserId());
                 responseStatus.setState(true);
                 responseStatus.setMessage("Success");
             } else {
@@ -240,8 +244,63 @@ public class TeacherServiceImpl implements TeacherService {
     }
 
     @Override
-    public List<Teacher> list() {
-        return teacherRepo.findAll();
+    public List<TeacherDTO> list() {
+        return teacherCustomRepo.getAllTeacher();
+    }
+
+    @Override
+    public List<Classes> getClasses(Long teacher_id) {
+        try {
+            return classRepo.findAllByTeacherId(teacher_id);
+        } catch (Exception ex) {
+            return null;
+        }
+    }
+
+    @Override
+    public TimeTableDTO getTimetableByClasses(Long id) {
+
+        Calendar c = Calendar.getInstance();
+        c.setFirstDayOfWeek(Calendar.MONDAY);
+        ArrayList<Map<LocalDate, String>> list1 = new ArrayList<Map<LocalDate, String>>();
+        Map<LocalDate, String> map = new LinkedHashMap<>();
+        try {
+            TimeTableDTO timeTableDTO = timeTableCustomRepo.doSearch(id);
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            SimpleDateFormat sdf1 = new SimpleDateFormat("MM/dd/yyyy");
+            try {
+                String sDate = timeTableDTO.getStart_date();
+                Date sParseDate = sdf.parse(sDate);
+                timeTableDTO.setStart_date(sdf1.format(sParseDate));
+                String eDate = timeTableDTO.getEnd_date();
+                Date eParseDate = sdf.parse(eDate);
+                timeTableDTO.setEnd_date(sdf1.format(eParseDate));
+            } catch (Exception e) {
+
+            }
+            c.setTime(new Date(timeTableDTO.getStart_date()));
+            c.set(Calendar.DAY_OF_WEEK, c.getFirstDayOfWeek());
+            LocalDate ld = LocalDateTime.ofInstant(c.toInstant(), c.getTimeZone().toZoneId()).toLocalDate();
+            DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+            LocalDate localDate = null, lastDate = null;
+
+            for (int j = 0; j < timeTableDTO.getNumber_slot() / 2; j++) {
+                if (j == 0) {
+                    localDate = LocalDate.parse(ld.toString(), dtf);
+                    lastDate = localDate.plus(6, ChronoUnit.DAYS);
+                    map.put(localDate, lastDate.toString());
+                } else if(j >= 1) {
+                    localDate = localDate.plus(7, ChronoUnit.DAYS);
+                    lastDate = localDate.plus(6, ChronoUnit.DAYS);
+                    map.put(localDate, lastDate.toString());
+                }
+            }
+            list1.add(map);
+            timeTableDTO.setFor_time(list1);
+            return timeTableDTO;
+        } catch (Exception ex) {
+            return null;
+        }
     }
 
 }

@@ -1,8 +1,12 @@
 package com.example.JWTSecure.service.impl;
 
 import com.example.JWTSecure.DTO.*;
+import com.example.JWTSecure.domain.Curriculum;
 import com.example.JWTSecure.domain.Student;
+import com.example.JWTSecure.domain.StudentInClass;
 import com.example.JWTSecure.domain.User;
+import com.example.JWTSecure.repo.CurriculumRepo;
+import com.example.JWTSecure.repo.StudentInClassRepo;
 import com.example.JWTSecure.repo.StudentRepo;
 import com.example.JWTSecure.repo.UserRepo;
 import com.example.JWTSecure.repo.impl.StudentCustomRepo;
@@ -13,6 +17,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
+import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.List;
 
@@ -26,6 +33,8 @@ public class StudentServiceImpl implements StudentService {
     private final StudentRepo studentRepo;
     private final UserRepo userRepo;
     private final StudentCustomRepo studentCustomRepo;
+    private final CurriculumRepo curriculumRepo;
+    private final StudentInClassRepo studentInClassRepo;
 
     @Override
     public StudentDTO getStudent(StudentDTO studentDTO) {
@@ -91,6 +100,49 @@ public class StudentServiceImpl implements StudentService {
                 searchResult.setMessage("Success");
                 searchResult.setResultData(getNotDuplicate(dataResult));
                 searchResult.setTotalRecordNoLimit(getNotDuplicate(dataResult).size());
+            } else {
+                searchResult.setCode("0");
+                searchResult.setSuccess(false);
+                searchResult.setTitle("Failure");
+                searchResult.setMessage("Failure");
+                searchResult.setResultData(Collections.emptyList());
+                searchResult.setTotalRecordNoLimit(0);
+            }
+            return searchResult;
+        } catch (Exception e) {
+            searchResult.setCode("0");
+            searchResult.setSuccess(false);
+            searchResult.setTitle("Failure");
+            searchResult.setMessage("Failure");
+            searchResult.setResultData(Collections.emptyList());
+            searchResult.setTotalRecordNoLimit(0);
+            return searchResult;
+        }
+    }
+
+    @Override
+    public SearchResultDTO<StudentDTO> getStudentPending(StudentDTO studentDTO) {
+        List<StudentDTO> dataResult;
+        SearchResultDTO<StudentDTO> searchResult = new SearchResultDTO<>();
+
+        try {
+            Integer totalRecord = studentCustomRepo.getTotalPending(studentDTO).size();
+            dataResult = studentCustomRepo.doSearchPending(studentDTO);
+
+//            for (StudentDTO i : dataResult) {
+//                if (groupClasses(dataResult, i.getStudent_Id()) != null) {
+//                    i.setClasses(groupClasses(dataResult, i.getStudent_Id()));
+//                    i.setCourses(groupCourses(dataResult, i.getStudent_Id()));
+//                }
+//            }
+
+            if (dataResult != null && !dataResult.isEmpty()) {
+                searchResult.setCode("0");
+                searchResult.setSuccess(true);
+                searchResult.setTitle("Success");
+                searchResult.setMessage("Success");
+                searchResult.setResultData(dataResult);
+                searchResult.setTotalRecordNoLimit(totalRecord);
             } else {
                 searchResult.setCode("0");
                 searchResult.setSuccess(false);
@@ -235,6 +287,82 @@ public class StudentServiceImpl implements StudentService {
         } catch (Exception e) {
             return null;
         }
+    }
+
+    @Override
+    public ResponseStatus updatePending(Long id) {
+        ResponseStatus responseStatus = new ResponseStatus();
+        try {
+            if (id != null) {
+                studentRepo.updatePending(id);
+                responseStatus.setState(true);
+                responseStatus.setMessage("Success");
+            } else {
+                responseStatus.setState(false);
+                responseStatus.setMessage("Failure");
+            }
+            return responseStatus;
+        } catch (Exception e) {
+            responseStatus.setState(false);
+            responseStatus.setMessage("Failure");
+            return responseStatus;
+        }
+    }
+
+    @Override
+    public ResponseStatus deletePending(Long id) {
+//        ResponseStatus responseStatus = new ResponseStatus();
+//        try {
+//            if (id != null) {
+//                userRepo.deleteById(studentRepo.findById(id).get().getUserId());
+//
+//                studentRepo.deleteById(id);
+//                responseStatus.setState(true);
+//                responseStatus.setMessage("Success");
+//            } else {
+//                responseStatus.setState(false);
+//                responseStatus.setMessage("Failure");
+//            }
+//            return responseStatus;
+//        } catch (Exception e) {
+//            responseStatus.setState(false);
+//            responseStatus.setMessage("Failure");
+//            return responseStatus;
+//        }
+        return null;
+    }
+
+    @Override
+    public ResponseStatus addCurriculum(Curriculum curriculum) {
+        ResponseStatus responseStatus = new ResponseStatus();
+        String timeStamp = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss").format(Calendar.getInstance().getTime());
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
+        LocalDateTime localDateTime = LocalDateTime.parse(timeStamp, formatter);
+        try{
+            curriculum.setCreatedAt(localDateTime);
+            curriculum.setUpdatedAt(localDateTime);
+            curriculumRepo.save(curriculum);
+            responseStatus.setState(true);
+            responseStatus.setMessage("Success");
+        }catch (Exception ex){
+            responseStatus.setState(false);
+            responseStatus.setMessage("Failure");
+        }
+        return responseStatus;
+    }
+
+    @Override
+    public ResponseStatus registerCourse(StudentInClass studentInClass) {
+        ResponseStatus responseStatus = new ResponseStatus();
+        try {
+            studentInClassRepo.save(studentInClass);
+            responseStatus.setMessage("Success");
+            responseStatus.setState(true);
+        }catch (Exception ex){
+            responseStatus.setMessage("Failure");
+            responseStatus.setState(false);
+        }
+        return responseStatus;
     }
 
 }
