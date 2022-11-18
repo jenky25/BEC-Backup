@@ -17,6 +17,8 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.util.*;
@@ -129,7 +131,14 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         Map<String, String> map = new HashMap<>();
         map.put("username", user.getUsername());
         map.put("name", user.getFullname());
-        return new org.springframework.security.core.userdetails.User(map.toString(), user.getPassword(), authorities);
+
+        String userPayload = "";
+		try {
+			userPayload = new ObjectMapper().writeValueAsString(map);
+		} catch (JsonProcessingException e) {
+			e.printStackTrace();
+		}
+        return new org.springframework.security.core.userdetails.User(userPayload, user.getPassword(), authorities);
     }
 
     @Override
