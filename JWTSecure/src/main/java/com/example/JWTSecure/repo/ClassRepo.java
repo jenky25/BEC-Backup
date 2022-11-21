@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 
@@ -20,4 +21,5 @@ public interface ClassRepo extends JpaRepository<Classes, Long> {
     @Query("UPDATE Classes c SET c.active = false WHERE c.id = ?1")
     int deActive(Long id);
     List<Classes> findAllByTeacherId(Long id);
+    Optional<Classes> findById(Long id);
 }

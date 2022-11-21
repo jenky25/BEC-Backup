@@ -9,7 +9,6 @@ import com.example.JWTSecure.repo.*;
 import com.example.JWTSecure.repo.impl.TeacherCustomRepo;
 import com.example.JWTSecure.repo.impl.TimeTableCustomRepo;
 import com.example.JWTSecure.service.TeacherService;
-import com.nimbusds.jose.util.Pair;
 import com.nimbusds.oauth2.sdk.util.StringUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -259,44 +258,54 @@ public class TeacherServiceImpl implements TeacherService {
 
     @Override
     public TimeTableDTO getTimetableByClasses(Long id) {
-
         Calendar c = Calendar.getInstance();
         c.setFirstDayOfWeek(Calendar.MONDAY);
         ArrayList<Map<LocalDate, String>> list1 = new ArrayList<Map<LocalDate, String>>();
         Map<LocalDate, String> map = new LinkedHashMap<>();
+        List<SearchTimeTable> list = new ArrayList<>();
+        TimeTableDTO timeTableDTO = new TimeTableDTO();
         try {
-            TimeTableDTO timeTableDTO = timeTableCustomRepo.doSearch(id);
+            SearchTimeTable searchTimeTable = timeTableCustomRepo.doSearch(id);
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             SimpleDateFormat sdf1 = new SimpleDateFormat("MM/dd/yyyy");
-            try {
-                String sDate = timeTableDTO.getStart_date();
-                Date sParseDate = sdf.parse(sDate);
-                timeTableDTO.setStart_date(sdf1.format(sParseDate));
-                String eDate = timeTableDTO.getEnd_date();
-                Date eParseDate = sdf.parse(eDate);
-                timeTableDTO.setEnd_date(sdf1.format(eParseDate));
-            } catch (Exception e) {
+            for (int i = 1; i <= 4; i++) {
+                if (i == searchTimeTable.getSlot_id()) {
+                    try {
+                        String sDate = searchTimeTable.getStart_date();
+                        Date sParseDate = sdf.parse(sDate);
+                        searchTimeTable.setStart_date(sdf1.format(sParseDate));
+                        String eDate = searchTimeTable.getEnd_date();
+                        Date eParseDate = sdf.parse(eDate);
+                        searchTimeTable.setEnd_date(sdf1.format(eParseDate));
+                        list.add(searchTimeTable);
+                    } catch (Exception e) {
 
-            }
-            c.setTime(new Date(timeTableDTO.getStart_date()));
-            c.set(Calendar.DAY_OF_WEEK, c.getFirstDayOfWeek());
-            LocalDate ld = LocalDateTime.ofInstant(c.toInstant(), c.getTimeZone().toZoneId()).toLocalDate();
-            DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-            LocalDate localDate = null, lastDate = null;
-
-            for (int j = 0; j < timeTableDTO.getNumber_slot() / 2; j++) {
-                if (j == 0) {
-                    localDate = LocalDate.parse(ld.toString(), dtf);
-                    lastDate = localDate.plus(6, ChronoUnit.DAYS);
-                    map.put(localDate, lastDate.toString());
-                } else if(j >= 1) {
-                    localDate = localDate.plus(7, ChronoUnit.DAYS);
-                    lastDate = localDate.plus(6, ChronoUnit.DAYS);
-                    map.put(localDate, lastDate.toString());
+                    }
+                } else {
+                    list.add(new SearchTimeTable());
                 }
             }
+
+//            c.setTime(new Date(searchTimeTable.getStart_date()));
+//            c.set(Calendar.DAY_OF_WEEK, c.getFirstDayOfWeek());
+//            LocalDate ld = LocalDateTime.ofInstant(c.toInstant(), c.getTimeZone().toZoneId()).toLocalDate();
+//            DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+//            LocalDate localDate = null, lastDate = null;
+//
+//            for (int j = 0; j < searchTimeTable.getNumber_slot() / 2; j++) {
+//                if (j == 0) {
+//                    localDate = LocalDate.parse(ld.toString(), dtf);
+//                    lastDate = localDate.plus(6, ChronoUnit.DAYS);
+//                    map.put(localDate, lastDate.toString());
+//                } else if (j >= 1) {
+//                    localDate = localDate.plus(7, ChronoUnit.DAYS);
+//                    lastDate = localDate.plus(6, ChronoUnit.DAYS);
+//                    map.put(localDate, lastDate.toString());
+//                }
+//            }
             list1.add(map);
-            timeTableDTO.setFor_time(list1);
+            timeTableDTO.setTime_table(list);
+//            timeTableDTO.setFor_time(list1);
             return timeTableDTO;
         } catch (Exception ex) {
             return null;

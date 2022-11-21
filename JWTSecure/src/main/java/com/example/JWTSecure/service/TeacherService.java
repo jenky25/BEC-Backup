@@ -3,8 +3,6 @@ package com.example.JWTSecure.service;
 import com.example.JWTSecure.DTO.*;
 import com.example.JWTSecure.domain.Activity;
 import com.example.JWTSecure.domain.Classes;
-import com.example.JWTSecure.domain.Teacher;
-import com.example.JWTSecure.domain.User;
 
 import java.util.List;
 

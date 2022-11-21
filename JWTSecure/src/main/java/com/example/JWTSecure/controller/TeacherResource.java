@@ -1,14 +1,11 @@
 package com.example.JWTSecure.controller;
-import com.example.JWTSecure.DTO.AddTeacherDTO;
+import com.example.JWTSecure.DTO.*;
 import com.example.JWTSecure.DTO.ResponseStatus;
-import com.example.JWTSecure.DTO.TeacherDTO;
-import com.example.JWTSecure.DTO.TimeTableDTO;
 import com.example.JWTSecure.domain.Classes;
 import com.example.JWTSecure.service.TeacherService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
 
 @RestController

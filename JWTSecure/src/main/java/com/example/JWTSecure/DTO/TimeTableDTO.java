@@ -15,17 +15,18 @@ import java.util.Map;
 @Setter
 @NoArgsConstructor
 public class TimeTableDTO implements Serializable{
-    private String class_name;
-    private String start_date;
-    private String end_date;
-    private String first_of_week;
-    private String second_of_week;
-    private String room_name;
-    private String course_name;
-    private Integer number_slot;
-    private String from_time;
-    private String to_time;
-    private ArrayList<Map<LocalDate, String>> for_time;
+//    private String class_name;
+//    private String start_date;
+//    private String end_date;
+//    private String first_of_week;
+//    private String second_of_week;
+//    private String room_name;
+//    private String course_name;
+//    private Integer number_slot;
+//    private String from_time;
+//    private String to_time;
+    private List<SearchTimeTable> time_table;
+//    private ArrayList<Map<LocalDate, String>> for_time;
 
 
 }
