@@ -1,10 +1,7 @@
 package com.example.JWTSecure.controller;
 import com.example.JWTSecure.DTO.*;
 import com.example.JWTSecure.DTO.ResponseStatus;
-import com.example.JWTSecure.domain.Classes;
-import com.example.JWTSecure.domain.Curriculum;
-import com.example.JWTSecure.domain.Slot;
-import com.example.JWTSecure.domain.Teacher;
+import com.example.JWTSecure.domain.*;
 import com.example.JWTSecure.service.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -41,6 +38,16 @@ public class AdminResource {
     @PostMapping("/view_teacher")
     public ResponseEntity<SearchResultDTO<TeacherDTO>> getTeachers(@RequestBody TeacherDTO teacherDTO) {
         return ResponseEntity.ok().body(teacherService.getAllTeacher(teacherDTO));
+    }
+
+    @GetMapping("/get_course")
+    public ResponseEntity<List<Course>> getCourse() {
+        return ResponseEntity.ok().body(academicAdminService.getCourse());
+    }
+
+    @GetMapping("/get_room")
+    public ResponseEntity<List<Room>> getRooms() {
+        return ResponseEntity.ok().body(academicAdminService.getRooms());
     }
 
 //    @DeleteMapping("/delete_teacher/{id}")

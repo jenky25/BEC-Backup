@@ -248,9 +248,10 @@ public class TeacherServiceImpl implements TeacherService {
     }
 
     @Override
-    public List<Classes> getClasses(Long teacher_id) {
+    public List<Classes> getClasses(String username) {
         try {
-            return classRepo.findAllByTeacherId(teacher_id);
+            User user = userRepo.findUserByUsername(username);
+            return classRepo.findAllByTeacherId(teacherRepo.findByUserId(user.getId()).getId());
         } catch (Exception ex) {
             return null;
         }

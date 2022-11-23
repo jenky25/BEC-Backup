@@ -15,6 +15,6 @@ public interface TeacherService {
     ResponseStatus createAct(Activity activity);
     ResponseStatus deleteTeacher(Long id);
     List<TeacherDTO> list();
-    List<Classes> getClasses(Long teacher_id);
+    List<Classes> getClasses(String username);
     TimeTableDTO getTimetableByClasses(Long id);
 }

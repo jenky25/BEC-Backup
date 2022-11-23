@@ -36,6 +36,10 @@ public class Course {
     private LocalDateTime updatedAt;
     @Column(name="number_slot")
     private Integer numberSlot;
+    @Column(name="image")
+    private String image;
+    @Column(name="description")
+    private String description;
 
     public Course(String name) {
         this.name = name;

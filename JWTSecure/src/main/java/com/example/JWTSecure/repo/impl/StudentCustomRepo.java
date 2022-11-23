@@ -25,7 +25,7 @@ public class StudentCustomRepo {
                         "join student_in_class sic on s.id = sic.student_id\n" +
                         "join class c on sic.class_id = c.id\n" +
                         "join course co on c.course_id = co.id");
-        sql.append(" WHERE 1 = 1 AND sic.is_paid = false");
+        sql.append(" WHERE 1 = 1 AND s.is_paid = false");
         if (studentDTO.getKey_search()!=null) {
             sql.append(" AND (UPPER(u.fullname) LIKE CONCAT('%', UPPER(:full_name), '%') ESCAPE '&') ");
         }
@@ -68,7 +68,7 @@ public class StudentCustomRepo {
                         "join student_in_class sic on s.id = sic.student_id\n" +
                         "join class c on sic.class_id = c.id\n" +
                         "join course co on c.course_id = co.id");
-        sql.append(" WHERE 1 = 1 AND sic.is_paid = false");
+        sql.append(" WHERE 1 = 1 AND s.is_paid = false");
         if (studentDTO.getKey_search()!=null) {
             sql.append(" AND (UPPER(u.fullname) LIKE CONCAT('%', UPPER(:full_name), '%') ESCAPE '&') ");
         }

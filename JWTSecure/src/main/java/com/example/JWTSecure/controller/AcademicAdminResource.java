@@ -4,8 +4,11 @@ import com.example.JWTSecure.DTO.ResponseStatus;
 import com.example.JWTSecure.domain.Course;
 import com.example.JWTSecure.domain.Quiz;
 import com.example.JWTSecure.domain.Room;
+import com.example.JWTSecure.domain.Slot;
 import com.example.JWTSecure.service.AcademicAdminService;
 import com.example.JWTSecure.service.RoomService;
+import com.example.JWTSecure.service.SlotService;
+import com.example.JWTSecure.service.TeacherService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -18,6 +21,19 @@ public class AcademicAdminResource {
 
     private final AcademicAdminService academicAdminService;
     private final RoomService roomService;
+    private final SlotService slotService;
+    private final TeacherService teacherService;
+
+    @GetMapping("/get_slot")
+    public ResponseEntity<List<Slot>> getSlot() {
+        return ResponseEntity.ok().body(slotService.getSlot());
+    }
+
+    @GetMapping("/get_teacher")
+    public ResponseEntity<List<TeacherDTO>> getTeachers() {
+        return ResponseEntity.ok().body(teacherService.list());
+    }
+
 
     //quiz
     @PostMapping("/add_quiz")

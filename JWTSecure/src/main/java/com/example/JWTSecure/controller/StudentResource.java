@@ -2,6 +2,7 @@ package com.example.JWTSecure.controller;
 import com.example.JWTSecure.DTO.*;
 import com.example.JWTSecure.DTO.ResponseStatus;
 import com.example.JWTSecure.domain.StudentInClass;
+import com.example.JWTSecure.service.ClassService;
 import com.example.JWTSecure.service.StudentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 public class StudentResource {
 
     private final StudentService studentService;
+    private final ClassService classService;
 
     @PostMapping("/add_student")
     public ResponseEntity<ResponseStatus> addStudent(@RequestBody AddStudentDTO addStudentDTO) {
@@ -32,6 +34,11 @@ public class StudentResource {
     @PutMapping("/edit_student")
     public ResponseEntity<ResponseStatus> editStudent(@RequestBody AddStudentDTO addStudentDTO) {
         return ResponseEntity.ok().body(studentService.editStudent(addStudentDTO));
+    }
+
+    @PostMapping("/get_all_class")
+    public ResponseEntity<SearchResultDTO<ClassDTO>> getClasses(@RequestBody ClassDTO classDTO) {
+        return ResponseEntity.ok().body(classService.getAllClass(classDTO));
     }
 
     @PostMapping("/register_course")

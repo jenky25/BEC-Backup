@@ -20,6 +20,7 @@ public interface UserRepo extends JpaRepository<User, Long> {
     User findByEmail(String email);
     User findByPhone(String phone);
     User findTopByOrderByIdDesc();
+    User findUserByUsername(String username);
     @Modifying
     @Query("UPDATE User user SET user.active = false WHERE user.id = ?1")
     int deactive(Long id);

@@ -94,6 +94,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .antMatchers("/api/admin/view_teacher")
                 .permitAll()
+                .antMatchers("/api/common/get_course")
+                .permitAll()
                 .and()
                 .csrf().disable()
                 .authorizeRequests()
