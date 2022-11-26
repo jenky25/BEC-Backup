@@ -3,10 +3,7 @@ package com.example.JWTSecure.service.impl;
 import com.example.JWTSecure.DTO.*;
 import com.example.JWTSecure.domain.*;
 import com.example.JWTSecure.repo.*;
-import com.example.JWTSecure.repo.impl.AcademicAdminCustomRepo;
-import com.example.JWTSecure.repo.impl.CourseCustomRepo;
-import com.example.JWTSecure.repo.impl.QuizCustomRepo;
-import com.example.JWTSecure.repo.impl.RoomCustomRepo;
+import com.example.JWTSecure.repo.impl.*;
 import com.example.JWTSecure.service.AcademicAdminService;
 import com.nimbusds.oauth2.sdk.util.StringUtils;
 import lombok.RequiredArgsConstructor;
@@ -40,6 +37,7 @@ public class AcademicAdminServiceImpl implements AcademicAdminService {
     private final CourseCustomRepo courseCustomRepo;
     private final QuizCustomRepo quizCustomRepo;
     private final RoomCustomRepo roomCustomRepo;
+    private final ClassCustomRepo classCustomRepo;
     private final ClassRepo classRepo;
     private final RoomRepo roomRepo;
 
@@ -361,11 +359,11 @@ public class AcademicAdminServiceImpl implements AcademicAdminService {
     @Override
     public List<Course> getCourse() {
         List<Course> list = new ArrayList<>();
-            try {
-                list = courseRepo.findAll();
-            } catch (Exception ex) {
-                return null;
-            }
+        try {
+            list = courseRepo.findAll();
+        } catch (Exception ex) {
+            return null;
+        }
         return list;
     }
 
@@ -400,6 +398,24 @@ public class AcademicAdminServiceImpl implements AcademicAdminService {
             searchResult.setResultData(Collections.emptyList());
             searchResult.setTotalRecordNoLimit(0);
             return searchResult;
+        }
+    }
+
+    @Override
+    public Course getCourseById(Long id) {
+        try {
+            return courseRepo.findById(id).get();
+        } catch (Exception ex) {
+            return null;
+        }
+    }
+
+    @Override
+    public List<ClassDTO> getClassByCourseId(Long id) {
+        try {
+            return classCustomRepo.getClasses(id);
+        } catch (Exception ex) {
+            return null;
         }
     }
 

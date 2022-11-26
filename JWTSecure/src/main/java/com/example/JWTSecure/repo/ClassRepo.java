@@ -22,4 +22,5 @@ public interface ClassRepo extends JpaRepository<Classes, Long> {
     int deActive(Long id);
     List<Classes> findAllByTeacherId(Long id);
     Optional<Classes> findById(Long id);
+    Optional<List<Classes>> findByCourseId(Long id);
 }

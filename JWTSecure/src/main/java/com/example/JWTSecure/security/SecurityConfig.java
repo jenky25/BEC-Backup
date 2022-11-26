@@ -94,7 +94,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .antMatchers("/api/admin/view_teacher")
                 .permitAll()
-                .antMatchers("/api/common/get_course")
+                .antMatchers("/api/common/*")
                 .permitAll()
                 .and()
                 .csrf().disable()
@@ -107,14 +107,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .addFilter(customAuthenticationFilter)
                 .addFilterBefore(new CustomAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class);
 //                .formLogin();
-
-
 //        http.addFilter(customAuthenticationFilter);
 //        http.addFilterBefore(new CustomAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class);
 
 
     }
-
 
     @Bean
     public DaoAuthenticationProvider daoAuthenticationProvider() {

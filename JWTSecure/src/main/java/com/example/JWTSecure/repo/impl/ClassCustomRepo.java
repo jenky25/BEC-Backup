@@ -17,6 +17,45 @@ public class ClassCustomRepo {
     @PersistenceContext
     private EntityManager entityManager;
 
+    public List<ClassDTO> getClasses(Long courseId) {
+
+        StringBuilder sql = new StringBuilder()
+                .append("select c.id as class_id, c.name as class_name, c.room_id as room_id, r.roomname as room_name,\n" +
+                        "u.id as user_id, t.id as teacher_Id, u.fullname as full_name, u.email as email, l.name as level,\n" +
+                        "r.capacity as capacity, c.start_date, c.end_date\n" +
+                        "from class c\n" +
+                        "join room r on r.id = c.room_id\n" +
+                        "join teacher t on c.teacher_id = t.id\n" +
+                        "join users u on t.user_id = u.id\n" +
+                        "join course co on co.id = c.course_id\n" +
+                        "join level l on co.level_id = l.id  ");
+        sql.append(" WHERE 1 = 1 ");
+        if(courseId!=null){
+            sql.append(" AND c.course_id = :courseId ");
+        }
+        NativeQuery<ClassDTO> query = ((Session) entityManager.getDelegate()).createNativeQuery(sql.toString());
+
+        if(courseId!=null){
+            query.setParameter("courseId", courseId);
+        }
+
+        query.addScalar("class_id", new LongType());
+        query.addScalar("class_name", new StringType());
+        query.addScalar("room_id", new LongType());
+        query.addScalar("room_name", new StringType());
+        query.addScalar("user_id", new LongType());
+        query.addScalar("teacher_id", new LongType());
+        query.addScalar("full_name", new StringType());
+        query.addScalar("email", new StringType());
+        query.addScalar("level", new StringType());
+        query.addScalar("capacity", new IntegerType());
+        query.addScalar("start_date", new StringType());
+        query.addScalar("end_date", new StringType());
+
+        query.setResultTransformer(Transformers.aliasToBean(ClassDTO.class));
+        return query.list();
+    }
+
     public List<ClassDTO> doSearch(ClassDTO classDTO) {
 
         StringBuilder sql = new StringBuilder()

@@ -82,4 +82,9 @@ public class TeacherResource {
         return ResponseEntity.ok().body(teacherService.getTimetableByClasses(classes.getId()));
     }
 
+    @PostMapping("/get_all_time_table_by_teacher")
+    public ResponseEntity<TimeTableDTO> getAllTimetableByTeacher(@RequestBody Classes classes) {
+        return ResponseEntity.ok().body(teacherService.getAllTimetableByTeacher(classes.getId()));
+    }
+
 }

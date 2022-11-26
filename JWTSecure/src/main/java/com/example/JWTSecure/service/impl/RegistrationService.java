@@ -13,7 +13,6 @@ import com.example.JWTSecure.validate.EmailValidator;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import java.time.LocalDateTime;
 import java.util.Optional;
 
@@ -37,11 +36,8 @@ public class RegistrationService {
                     request.getEmail(),
                     request.getPhone(),
                     request.getAddress()));
-
-            //???
-            User user = userRepo.findByUsername(request.getFullname());
+            User user = userRepo.findByUsername(request.getUsername());
             studentRepo.save(new Student(null, user.getId(),4L));
-            //
             String link = "http://localhost:8070/api/v1/registration/confirm?token=" + tokenForNewUser;
             emailSender.sendEmail(request.getEmail(), buildEmail(request.getFullname(), link));
             return tokenForNewUser;
@@ -49,7 +45,6 @@ public class RegistrationService {
             throw new IllegalStateException(String.format("Email %s, not valid", request.getEmail()));
         }
     }
-
 
     @Transactional
     public String confirmToken(String token) {

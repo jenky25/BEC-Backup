@@ -16,6 +16,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
 import javax.transaction.Transactional;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
@@ -35,6 +36,7 @@ public class StudentServiceImpl implements StudentService {
     private final StudentCustomRepo studentCustomRepo;
     private final CurriculumRepo curriculumRepo;
     private final StudentInClassRepo studentInClassRepo;
+
 
     @Override
     public StudentDTO getStudent(StudentDTO studentDTO) {
@@ -128,14 +130,6 @@ public class StudentServiceImpl implements StudentService {
         try {
             Integer totalRecord = studentCustomRepo.getTotalPending(studentDTO).size();
             dataResult = studentCustomRepo.doSearchPending(studentDTO);
-
-//            for (StudentDTO i : dataResult) {
-//                if (groupClasses(dataResult, i.getStudent_Id()) != null) {
-//                    i.setClasses(groupClasses(dataResult, i.getStudent_Id()));
-//                    i.setCourses(groupCourses(dataResult, i.getStudent_Id()));
-//                }
-//            }
-
             if (dataResult != null && !dataResult.isEmpty()) {
                 searchResult.setCode("0");
                 searchResult.setSuccess(true);
@@ -198,8 +192,6 @@ public class StudentServiceImpl implements StudentService {
 
                             student.setUserId(userRepo.findTopByOrderByIdDesc().getId());
                             student.setRoleId(4L);
-//                            student.setClassId(addStudentDTO.getClassId());
-
                             studentRepo.save(student);
                             rs.setMessage("Ok");
                             rs.setState(true);
@@ -244,7 +236,6 @@ public class StudentServiceImpl implements StudentService {
                     if (userRepo.findByEmail(addStudentDTO.getEmail()) == null) {
                         student.setUserId(addStudentDTO.getId());
                         student.setRoleId(4L);
-//                        student.setClassId(addStudentDTO.getClassId());
                         studentRepo.save(student);
 
                         user.setId(addStudentDTO.getId());
@@ -311,24 +302,6 @@ public class StudentServiceImpl implements StudentService {
 
     @Override
     public ResponseStatus deletePending(Long id) {
-//        ResponseStatus responseStatus = new ResponseStatus();
-//        try {
-//            if (id != null) {
-//                userRepo.deleteById(studentRepo.findById(id).get().getUserId());
-//
-//                studentRepo.deleteById(id);
-//                responseStatus.setState(true);
-//                responseStatus.setMessage("Success");
-//            } else {
-//                responseStatus.setState(false);
-//                responseStatus.setMessage("Failure");
-//            }
-//            return responseStatus;
-//        } catch (Exception e) {
-//            responseStatus.setState(false);
-//            responseStatus.setMessage("Failure");
-//            return responseStatus;
-//        }
         return null;
     }
 
@@ -338,13 +311,13 @@ public class StudentServiceImpl implements StudentService {
         String timeStamp = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss").format(Calendar.getInstance().getTime());
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
         LocalDateTime localDateTime = LocalDateTime.parse(timeStamp, formatter);
-        try{
+        try {
             curriculum.setCreatedAt(localDateTime);
             curriculum.setUpdatedAt(localDateTime);
             curriculumRepo.save(curriculum);
             responseStatus.setState(true);
             responseStatus.setMessage("Success");
-        }catch (Exception ex){
+        } catch (Exception ex) {
             responseStatus.setState(false);
             responseStatus.setMessage("Failure");
         }
@@ -352,13 +325,29 @@ public class StudentServiceImpl implements StudentService {
     }
 
     @Override
-    public ResponseStatus registerCourse(StudentInClass studentInClass) {
+    public ResponseStatus registerCourse(RegisterClass registerClass) {
         ResponseStatus responseStatus = new ResponseStatus();
+        StudentInClass studentInClass = new StudentInClass();
+        Long userId = userRepo.findByUsername(registerClass.getUsername()).getId();
+        Long studentId = studentRepo.findByUserId(userId).getId();
         try {
-            studentInClassRepo.save(studentInClass);
-            responseStatus.setMessage("Success");
-            responseStatus.setState(true);
-        }catch (Exception ex){
+            if (studentInClassRepo.countStudentInClassByClassId(registerClass.getClassId()) <= 30) {
+                if (studentInClassRepo.findStudentInClassByClassIdAndStudentId(registerClass.getClassId(), studentId) == null) {
+                    studentInClass.setIsPaid(false);
+                    studentInClass.setClassId(registerClass.getClassId());
+                    studentInClass.setStudentId(studentId);
+                    studentInClassRepo.save(studentInClass);
+                    responseStatus.setMessage("Success");
+                    responseStatus.setState(true);
+                } else {
+                    responseStatus.setMessage("Failure");
+                    responseStatus.setState(false);
+                }
+            } else {
+                responseStatus.setMessage("Failure");
+                responseStatus.setState(false);
+            }
+        } catch (Exception ex) {
             responseStatus.setMessage("Failure");
             responseStatus.setState(false);
         }

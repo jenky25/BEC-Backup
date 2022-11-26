@@ -5,9 +5,9 @@ import com.example.JWTSecure.DTO.ResponseStatus;
 import com.example.JWTSecure.DTO.SearchResultDTO;
 import com.example.JWTSecure.domain.*;
 import com.example.JWTSecure.repo.ClassRepo;
+import com.example.JWTSecure.repo.ClassScheduleRepo;
 import com.example.JWTSecure.repo.ClassSlotRepo;
 import com.example.JWTSecure.repo.CourseRepo;
-import com.example.JWTSecure.repo.TeacherRepo;
 import com.example.JWTSecure.repo.impl.ClassCustomRepo;
 import com.example.JWTSecure.service.ClassService;
 import com.nimbusds.oauth2.sdk.util.StringUtils;
@@ -36,6 +36,7 @@ public class ClassServiceImpl implements ClassService {
     private final ClassRepo classRepo;
     private final ClassSlotRepo classSlotRepo;
     private final CourseRepo courseRepo;
+    private final ClassScheduleRepo classScheduleRepo;
 
 
     @Override
@@ -145,6 +146,19 @@ public class ClassServiceImpl implements ClassService {
                     classSlot.setFirstOfWeek(dayOfWeek1.getValue());
                     classSlot.setSecondOfWeek(dayOfWeek2.getValue());
                     classSlotRepo.save(classSlot);
+
+                    LocalDate localDate1 = LocalDate.parse(classDTO.getStart_date(), dtf);
+                    LocalDate localDate2 = LocalDate.parse(classDTO.getStart_date(), dtf);
+                    DayOfWeek range1 = dayOfWeek2.minus(dayOfWeek1.getValue());
+                    int j = 1;
+                    for (int i = 0; i < courseRepo.findById(classDTO.getCourse_id()).get().getNumberSlot() / 2; i++) {
+                        localDate2 = localDate1.plus(i, ChronoUnit.WEEKS);
+                        classScheduleRepo.save(new ClassSchedule(null, classRepo.findTopByOrderByIdDesc().getId(), j, localDate2, classDTO.getRoom_id(), classDTO.getSlot_id(), null));
+                        j = (i + 1) * 2;
+                        classScheduleRepo.save(new ClassSchedule(null, classRepo.findTopByOrderByIdDesc().getId(), j, localDate2.plus(range1.getValue(), ChronoUnit.DAYS), classDTO.getRoom_id(), classDTO.getSlot_id(), null));
+                        j = j + 1;
+                    }
+
                     rs.setMessage("Ok");
                     rs.setState(true);
                 }

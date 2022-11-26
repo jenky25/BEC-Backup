@@ -42,7 +42,7 @@ public class StudentResource {
     }
 
     @PostMapping("/register_course")
-    public ResponseEntity<ResponseStatus> registerCourse(@RequestBody StudentInClass studentInClass) {
-        return ResponseEntity.ok().body(studentService.registerCourse(studentInClass));
+    public ResponseEntity<ResponseStatus> registerCourse(@RequestBody RegisterClass registerClass) {
+        return ResponseEntity.ok().body(studentService.registerCourse(registerClass));
     }
 }

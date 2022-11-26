@@ -18,5 +18,5 @@ public interface StudentService {
     ResponseStatus updatePending(Long id);
     ResponseStatus deletePending(Long id);
     ResponseStatus addCurriculum(Curriculum curriculum);
-    ResponseStatus registerCourse(StudentInClass studentInClass);
+    ResponseStatus registerCourse(RegisterClass registerClasss);
 }

@@ -10,4 +10,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface StudentInClassRepo extends JpaRepository<StudentInClass, Long> {
 
+    int countStudentInClassByClassId(Long id);
+    StudentInClass findStudentInClassByClassIdAndStudentId(Long classId, Long studentId);
 }

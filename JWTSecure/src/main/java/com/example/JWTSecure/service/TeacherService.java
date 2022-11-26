@@ -17,4 +17,6 @@ public interface TeacherService {
     List<TeacherDTO> list();
     List<Classes> getClasses(String username);
     TimeTableDTO getTimetableByClasses(Long id);
+    TimeTableDTO getAllTimetableByTeacher(Long id);
+
 }

@@ -35,7 +35,6 @@ public class AcademicAdminResource {
     }
 
 
-    //quiz
     @PostMapping("/add_quiz")
     public ResponseEntity<ResponseStatus> addQuiz(@RequestBody Quiz quiz) {
         return ResponseEntity.ok().body(academicAdminService.addQuiz(quiz));
@@ -61,7 +60,6 @@ public class AcademicAdminResource {
         return ResponseEntity.ok().body(academicAdminService.editQuiz(quiz));
     }
 
-    //course
     @PostMapping("/add_course")
     public ResponseEntity<ResponseStatus> addCourse(@RequestBody Course course) {
         return ResponseEntity.ok().body(academicAdminService.addCourse(course));
@@ -82,7 +80,6 @@ public class AcademicAdminResource {
         return ResponseEntity.ok().body(academicAdminService.editCourse(courseDTO));
     }
 
-    //room
     @PostMapping("/get_room_paging")
     public ResponseEntity<SearchResultDTO<RoomDTO>> getRoomPaging(@RequestBody RoomDTO roomDTO) {
         return ResponseEntity.ok().body(academicAdminService.getRoom(roomDTO));

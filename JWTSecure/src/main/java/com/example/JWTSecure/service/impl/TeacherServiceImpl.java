@@ -37,6 +37,7 @@ public class TeacherServiceImpl implements TeacherService {
     private final ActivityRepo activityRepo;
     private final ClassRepo classRepo;
     private final TimeTableCustomRepo timeTableCustomRepo;
+    private final ClassScheduleRepo classScheduleRepo;
 
     public SearchResultDTO<TeacherDTO> getAllTeacher(TeacherDTO productDTO) {
         List<TeacherDTO> dataResult;
@@ -311,6 +312,16 @@ public class TeacherServiceImpl implements TeacherService {
         } catch (Exception ex) {
             return null;
         }
+    }
+
+    @Override
+    public TimeTableDTO getAllTimetableByTeacher(Long id) {
+
+        if(id!=null){
+
+        }
+
+        return null;
     }
 
 }
